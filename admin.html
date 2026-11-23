@@ -18,7 +18,8 @@ input,button{font:inherit;min-height:48px;border-radius:12px;border:1px solid va
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 .mut{color:var(--mut);font-size:14px}
 .err{color:#FFB4A9}
-.hide{display:none}
+.f{display:grid;gap:12px}
+.hide{display:none!important}
 .t{display:flex;gap:8px;margin:16px 0}
 .t button{flex:1;cursor:pointer}
 .t .on{background:#fff;color:#0B2545;font-weight:600}
@@ -27,7 +28,7 @@ input,button{font:inherit;min-height:48px;border-radius:12px;border:1px solid va
 <body>
 <div class="w">
 <h1>SJICHOSSO · Msimamizi</h1>
-<form id="lg" style="display:grid;gap:12px">
+<form id="lg" class="f">
 <input id="em" type="email" placeholder="Barua pepe" autocomplete="username" required>
 <input id="pw" type="password" placeholder="Nywila" autocomplete="current-password" required>
 <button class="b" type="submit">Ingia</button>
