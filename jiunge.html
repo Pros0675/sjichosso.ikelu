@@ -1,222 +1,29 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sw">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description"
-        content="Jiunge na SJICHOSSO na uwe sehemu ya umoja, ushirikiano na maendeleo.">
-
-  <title>Jiunge na SJICHOSSO</title>
-
-  <link rel="stylesheet" href="style.css">
-
-  <style>
-    .join-container {
-      max-width: 760px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    .join-card {
-      background: white;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 5px 22px rgba(0,0,0,.08);
-    }
-
-    .join-card h2 {
-      color: #123456;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .join-card .intro {
-      text-align: center;
-      line-height: 1.7;
-      margin-bottom: 25px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 7px;
-      color: #173654;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccd5df;
-      border-radius: 7px;
-      font-size: 15px;
-      box-sizing: border-box;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: 2px solid #21834a;
-      border-color: #21834a;
-    }
-
-    .join-button {
-      width: 100%;
-      padding: 14px;
-      background: #176b3a;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .join-button:hover {
-      background: #10532c;
-    }
-
-    .join-button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    #formMessage {
-      margin-top: 18px;
-      text-align: center;
-      font-weight: 600;
-      line-height: 1.6;
-    }
-
-    .success-message {
-      color: #176b3a;
-    }
-
-    .error-message {
-      color: #b42318;
-    }
-
-    @media(max-width: 600px) {
-      .join-container {
-        padding: 12px;
-      }
-
-      .join-card {
-        padding: 20px;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-en="Join Us – SJICHOSSO">Jiunge Nasi – SJICHOSSO</title>
+<meta name="description" content="Jisajili chuo chako ili kujiunga na SJICHOSSO, muungano wa viongozi wa wanafunzi wa vyuo vyote Tanzania.">
+<meta name="theme-color" content="#0B2545">
+<link rel="canonical" href="https://pros0675.github.io/sjichosso.ikelu/jiunge.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SJICHOSSO">
+<meta property="og:title" content="Jiunge Nasi – SJICHOSSO">
+<meta property="og:description" content="Jisajili chuo chako ili kujiunga na SJICHOSSO, muungano wa viongozi wa wanafunzi wa vyuo vyote Tanzania.">
+<meta property="og:url" content="https://pros0675.github.io/sjichosso.ikelu/jiunge.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;🇹🇿&lt;/text&gt;&lt;/svg&gt;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
-
 <body>
-
-  <header class="site-header">
-    <div class="container">
-
-      <h1>SJICHOSSO</h1>
-
-      <p>Umoja, Ushirikiano na Maendeleo</p>
-
-      <button
-        id="menuToggle"
-        type="button"
-        aria-label="Fungua menyu"
-        aria-expanded="false"
-      >
-        ☰
-      </button>
-
-      <nav id="navMenu">
-        <a href="index.html">Nyumbani</a>
-        <a href="kuhusu.html">Kuhusu Sisi</a>
-        <a href="wanachama.html">Wanachama</a>
-        <a href="uongozi.html">Uongozi</a>
-        <a href="shughuli.html">Shughuli</a>
-        <a href="nyaraka.html">Nyaraka</a>
-        <a href="habari.html">Habari</a>
-        <a href="jiunge.html">Jiunge</a>
-      </nav>
-
-    </div>
-  </header>
-
-  <main class="join-container">
-
-    <section class="join-card">
-
-      <h2>Jiunge na SJICHOSSO</h2>
-
-      <p class="intro">
-        Karibu SJICHOSSO! Jaza taarifa zako hapa chini
-        ili kuwasilisha ombi la kujiunga na chama.
-      </p>
-
-      <form id="joinForm">
-
-        <div class="form-group">
-          <label for="name">Majina kamili *</label>
-
-          <input
-            type="text"
-            id="name"
-            name="name"
-            maxlength="99"
-            placeholder="Andika majina yako kamili"
-            autocomplete="name"
-            required
-          >
-        </div>
-
-        <div class="form-group">
-          <label for="college">Jina la chuo *</label>
-
-          <input
-            type="text"
-            id="college"
-            name="college"
-            maxlength="149"
-            placeholder="Andika jina la chuo"
-            required
-          >
-        </div>
-
-        <div class="form-group">
-          <label for="group">Kikundi</label>
-
-          <input
-            type="text"
-            id="group"
-            name="group"
-            maxlength="59"
-            placeholder="Andika jina la kikundi"
-          >
-        </div>
-
-        <button
-          type="submit"
-          class="join-button"
-        >
-          Wasilisha Maombi
-        </button>
-
-        <p id="formMessage" role="status" aria-live="polite"></p>
-
-      </form>
-
-    </section>
-
-  </main>
-
-  <footer>
-    <p>&copy; 2026 SJICHOSSO. Haki zote zimehifadhiwa.</p>
-  </footer>
-
-  <script type="module" src="app.js"></script>
-
+<main id="main" tabindex="-1">
+<div class="pb"><div class="wrap"><span class="pill">Umoja • Uongozi • Maendeleo</span><h1>Jiunge Nasi</h1><p>Jaza fomu hii ili chuo chako kiunganishwe na SJICHOSSO.</p></div></div><section><div class="wrap"><div class="jg"><div class="card r"><h2 style="font-size:28px">Jiunge Nasi</h2><form id="f" novalidate class="jf"><div class="fl"><label for="n">Jina kamili</label><input id="n" autocomplete="name" required maxlength="100" aria-describedby="n-e"><small class="fe" id="n-e" role="alert"></small></div><div class="fl"><label for="c">Chuo</label><input id="c" list="cl" autocomplete="organization" required maxlength="150" aria-describedby="c-e"><datalist id="cl"><option value="St. Augustine University"><option value="Mbeya University of Science and Technology"><option value="Teofilo Kisanji University"><option value="University of Dar es Salaam"><option value="Open University of Tanzania"></datalist><small class="fe" id="c-e" role="alert"></small></div><div class="fl"><label for="k">Kundi lako</label><select id="k"><option>Kiongozi wa wanafunzi</option><option>Mwanafunzi</option><option>Mwalimu / Mhadhiri</option></select></div><div class="fl"><label for="e">Barua pepe</label><input id="e" type="email" autocomplete="email" required maxlength="200" aria-describedby="e-e"><small class="fe" id="e-e" role="alert"></small></div><div class="fl"><label for="p">Namba ya simu (si lazima)</label><input id="p" type="tel" autocomplete="tel" maxlength="30" aria-describedby="p-e"><small class="fe" id="p-e" role="alert"></small></div><div class="hpw" aria-hidden="true"><label>Website<input id="hp" tabindex="-1" autocomplete="off"></label></div><button class="btn gold" type="submit">Tuma Ombi</button><div id="ok" role="status"></div><div id="oe" role="alert" style="display:none;padding:18px;border-radius:14px;background:#B3261E;color:#fff;font-weight:600">Imeshindwa kutuma. Jaribu tena.</div></form></div><div class="r"><div class="eyebrow">Kwa nini ujiunge?</div><div class="vl"><div class="v r" style="--c:#1E7F4F;--i:#1E7F4F"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><circle cx="5" cy="10" r="2"/><circle cx="19" cy="10" r="2"/><path d="M6 19c0-3 3-5 6-5s6 2 6 5M1 18c0-2 1-3 3-3M23 18c0-2-1-3-3-3"/></svg></div><div><b>Uwakilishi</b><span>Kusimamia maslahi ya wanafunzi katika ngazi zote.</span></div></div><div class="v r" style="--c:#F2B705;--i:#1E7F4F"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12l4-4 4 2 3-2 4 4M3 12l5 6a2 2 0 0 0 3 0l1-1M21 12l-5 6a2 2 0 0 1-3 0"/></svg></div><div><b>Umoja</b><span>Kujenga mshikamano miongoni mwa wanafunzi.</span></div></div><div class="v r" style="--c:#0B2545;--i:#0B2545"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div><div><b>Uwajibikaji</b><span>Kuhakikisha uwazi na uwajibikaji katika uongozi.</span></div></div></div></div></div></div></section>
+</main>
+<script src="config.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
