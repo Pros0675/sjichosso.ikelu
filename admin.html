@@ -1,271 +1,84 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sw">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SJICHOSSO Admin Dashboard">
-  <title>Admin Dashboard | SJICHOSSO</title>
-  <link rel="stylesheet" href="style.css">
-
-  <style>
-    .admin-container {
-      max-width: 1100px;
-      margin: 35px auto;
-      padding: 16px;
-    }
-
-    .admin-card {
-      background: #fff;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0,0,0,.08);
-      margin-bottom: 22px;
-    }
-
-    .admin-card h2 {
-      color: #173654;
-      margin-top: 0;
-    }
-
-    .admin-form {
-      max-width: 450px;
-      margin: auto;
-    }
-
-    .admin-form label {
-      display: block;
-      margin: 14px 0 7px;
-      font-weight: 600;
-    }
-
-    .admin-form input {
-      width: 100%;
-      padding: 12px;
-      box-sizing: border-box;
-      border: 1px solid #ccd5df;
-      border-radius: 7px;
-    }
-
-    .admin-button {
-      border: 0;
-      border-radius: 7px;
-      padding: 11px 17px;
-      background: #176b3a;
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 15px;
-    }
-
-    .admin-button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    .logout-button {
-      background: #a52a2a;
-    }
-
-    .delete-button {
-      background: #a52a2a;
-      padding: 7px 10px;
-      margin: 0;
-    }
-
-    .admin-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .admin-search {
-      width: 100%;
-      max-width: 350px;
-      padding: 11px;
-      border: 1px solid #ccd5df;
-      border-radius: 7px;
-      box-sizing: border-box;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 650px;
-    }
-
-    .admin-table th,
-    .admin-table td {
-      padding: 12px;
-      border-bottom: 1px solid #e5eaf0;
-      text-align: left;
-    }
-
-    .admin-table th {
-      background: #173654;
-      color: white;
-    }
-
-    .admin-message {
-      margin-top: 14px;
-      line-height: 1.5;
-      font-weight: 600;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .admin-stat {
-      font-size: 28px;
-      font-weight: bold;
-      color: #176b3a;
-    }
-
-    @media(max-width: 600px) {
-      .admin-card {
-        padding: 17px;
-      }
-
-      .admin-toolbar {
-        align-items: stretch;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>SJICHOSSO – Msimamizi</title>
+<style>
+:root{--bg:#07162B;--card:#0D2140;--line:#1C3558;--ink:#EAF0F8;--mut:#A9B6C8;--gold:#F2B705}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif;padding:20px}
+.w{max-width:760px;margin:0 auto}
+h1{font-size:22px;margin:0 0 16px}
+input,button{font:inherit;min-height:48px;border-radius:12px;border:1px solid var(--line);padding:0 16px;background:var(--card);color:var(--ink);width:100%}
+.b{background:var(--gold);color:#0B2545;border:0;font-weight:600;cursor:pointer}
+.g{background:transparent;cursor:pointer;width:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.mut{color:var(--mut);font-size:14px}
+.err{color:#FFB4A9}
+.f{display:grid;gap:12px}
+.hide{display:none!important}
+.t{display:flex;gap:8px;margin:16px 0}
+.t button{flex:1;cursor:pointer}
+.t .on{background:#fff;color:#0B2545;font-weight:600}
+</style>
 </head>
-
 <body>
-
-<header class="site-header">
-  <div class="container">
-    <h1>SJICHOSSO</h1>
-    <p>Umoja, Ushirikiano na Maendeleo</p>
-
-    <button
-      id="menuToggle"
-      type="button"
-      aria-label="Fungua menyu"
-      aria-expanded="false"
-    >☰</button>
-
-    <nav id="navMenu">
-      <a href="index.html">Nyumbani</a>
-      <a href="kuhusu.html">Kuhusu Sisi</a>
-      <a href="wanachama.html">Wanachama</a>
-      <a href="habari.html">Habari</a>
-      <a href="jiunge.html">Jiunge</a>
-    </nav>
-  </div>
-</header>
-
-<main class="admin-container">
-
-  <!-- LOGIN -->
-  <section id="loginSection" class="admin-card">
-    <div class="admin-form">
-      <h2>Admin Login</h2>
-      <p>Ingia kwa kutumia akaunti ya msimamizi iliyoidhinishwa.</p>
-
-      <form id="adminLoginForm">
-        <label for="adminEmail">Barua pepe</label>
-        <input
-          type="email"
-          id="adminEmail"
-          autocomplete="username"
-          required
-        >
-
-        <label for="adminPassword">Password</label>
-        <input
-          type="password"
-          id="adminPassword"
-          autocomplete="current-password"
-          required
-        >
-
-        <button class="admin-button" id="loginButton" type="submit">
-          Ingia
-        </button>
-      </form>
-
-      <p id="loginMessage" class="admin-message" role="status"></p>
-    </div>
-  </section>
-
-  <!-- DASHBOARD -->
-  <section id="dashboardSection" class="hidden">
-
-    <div class="admin-card">
-      <div class="admin-toolbar">
-        <div>
-          <h2>Karibu kwenye Admin Dashboard</h2>
-          <p id="adminIdentity"></p>
-        </div>
-
-        <button id="logoutButton" class="admin-button logout-button">
-          Toka
-        </button>
-      </div>
-    </div>
-
-    <div class="admin-card">
-      <h2>Muhtasari wa Maombi</h2>
-      <div class="admin-stat" id="registrationCount">0</div>
-      <p>Jumla ya maombi yaliyohifadhiwa</p>
-    </div>
-
-    <div class="admin-card">
-      <h2>Maombi ya Kujiunga</h2>
-
-      <div class="admin-toolbar">
-        <input
-          type="search"
-          id="registrationSearch"
-          class="admin-search"
-          placeholder="Tafuta kwa jina au chuo..."
-        >
-
-        <button id="refreshButton" class="admin-button">
-          Onyesha upya
-        </button>
-      </div>
-
-      <p id="dashboardMessage" class="admin-message" role="status"></p>
-
-      <div class="table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jina</th>
-              <th>Chuo</th>
-              <th>Kikundi</th>
-              <th>Tarehe</th>
-              <th>Kitendo</th>
-            </tr>
-          </thead>
-          <tbody id="registrationsTable">
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </section>
-
-</main>
-
-<footer>
-  <p>&copy; 2026 SJICHOSSO. Haki zote zimehifadhiwa.</p>
-</footer>
-
-<script type="module" src="app.js"></script>
-
+<div class="w">
+<h1>SJICHOSSO · Msimamizi</h1>
+<form id="lg" class="f">
+<input id="em" type="email" placeholder="Barua pepe" autocomplete="username" required>
+<input id="pw" type="password" placeholder="Nywila" autocomplete="current-password" required>
+<button class="b" type="submit">Ingia</button>
+<div id="er" class="err"></div>
+</form>
+<div id="ap" class="hide">
+<div class="row"><span id="who" class="mut"></span><button id="out" class="g">Toka</button></div>
+<div class="t"><button id="t1" class="on">Maombi ya vyuo</button><button id="t2">Wanaojiunga na habari</button></div>
+<div class="row"><span id="cnt" class="mut"></span><button id="csv" class="g">Pakua CSV</button></div>
+<div id="ls"></div>
+</div>
+</div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import {getFirestore,collection,getDocs,query,orderBy,deleteDoc,doc} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA6JJ8SIdb3-ZXhv_hyY0oyuYCECLQRHVg",authDomain:"sjichosso.firebaseapp.com",projectId:"sjichosso",storageBucket:"sjichosso.firebasestorage.app",messagingSenderId:"849406364609",appId:"1:849406364609:web:16fb63a57207fbe0e8fd40"};
+const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app);
+let col="registrations",rows=[];
+const $=id=>document.getElementById(id);
+$("lg").onsubmit=async e=>{e.preventDefault();$("er").textContent="";try{await signInWithEmailAndPassword(auth,$("em").value,$("pw").value)}catch(x){$("er").textContent="Barua pepe au nywila si sahihi."}};
+$("out").onclick=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{$("lg").classList.toggle("hide",!!u);$("ap").classList.toggle("hide",!u);if(u){$("who").textContent=u.email;load()}});
+async function load(){
+$("ls").textContent="Inapakia...";
+try{const s=await getDocs(query(collection(db,col),orderBy("at","desc")));rows=s.docs.map(d=>({id:d.id,...d.data()}));draw()}
+catch(x){$("ls").textContent="Huna ruhusa ya kuona data hii. Angalia sheria za Firestore."}
+}
+function draw(){
+const l=$("ls");l.textContent="";$("cnt").textContent="Jumla: "+rows.length;
+rows.forEach(r=>{
+const c=document.createElement("div");c.className="card row";
+const a=document.createElement("div");
+const t=document.createElement("b");t.textContent=col==="registrations"?r.name:r.email;a.append(t);
+const m=document.createElement("div");m.className="mut";
+m.textContent=(col==="registrations"?r.college+" · "+r.group+" · "+(r.email||"")+(r.phone?" · "+r.phone:"")+" · ":"")+(r.at?r.at.toDate().toLocaleString():"");a.append(m);
+const d=document.createElement("button");d.className="g";d.textContent="Futa";
+d.onclick=async()=>{if(confirm("Futa rekodi hii?")){await deleteDoc(doc(db,col,r.id));load()}};
+c.append(a,d);l.append(c);
+});
+}
+function tab(c,on,off){col=c;$(on).className="on";$(off).className="";load()}
+$("t1").onclick=()=>tab("registrations","t1","t2");
+$("t2").onclick=()=>tab("subscribers","t2","t1");
+$("csv").onclick=()=>{
+const k=col==="registrations"?["name","college","group","email","phone"]:["email"];
+const q=v=>{v=String(v??"");if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'};
+const lines=[k.concat("at").join(",")].concat(rows.map(r=>k.map(x=>q(r[x])).concat(q(r.at?r.at.toDate().toISOString():"")).join(",")));
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv"}));a.download=col+".csv";a.click();
+};
+</script>
 </body>
 </html>
