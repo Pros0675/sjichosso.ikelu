@@ -34,3 +34,4 @@ save('registrations',{name:nm,college:cl,group:document.getElementById('k').valu
 var NF=document.getElementById('nf');
 NF.addEventListener('submit',function(e){e.preventDefault();var k=document.getElementById('nk'),ne=document.getElementById('ne');k.style.display='none';ne.style.display='none';
 save('subscribers',{email:NF.querySelector('input').value}).then(function(){k.style.display='block';NF.reset()}).catch(function(){ne.style.display='block'})});
+ 
