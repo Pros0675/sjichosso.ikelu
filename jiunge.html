@@ -4,108 +4,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Omba kujiunga na SJICHOSSO.">
-  <title>Jiunge na Sisi | SJICHOSSO</title>
+
+  <meta name="description"
+        content="Jiunge na SJICHOSSO na uwe sehemu ya umoja, ushirikiano na maendeleo.">
+
+  <title>Jiunge na SJICHOSSO</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .join-container {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .join-card {
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 5px 22px rgba(0,0,0,.08);
+    }
+
+    .join-card h2 {
+      color: #123456;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .join-card .intro {
+      text-align: center;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 7px;
+      color: #173654;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccd5df;
+      border-radius: 7px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: 2px solid #21834a;
+      border-color: #21834a;
+    }
+
+    .join-button {
+      width: 100%;
+      padding: 14px;
+      background: #176b3a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .join-button:hover {
+      background: #10532c;
+    }
+
+    .join-button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    #formMessage {
+      margin-top: 18px;
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .success-message {
+      color: #176b3a;
+    }
+
+    .error-message {
+      color: #b42318;
+    }
+
+    @media(max-width: 600px) {
+      .join-container {
+        padding: 12px;
+      }
+
+      .join-card {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+
   <header class="site-header">
     <div class="container">
+
       <h1>SJICHOSSO</h1>
+
       <p>Umoja, Ushirikiano na Maendeleo</p>
 
-      <nav>
+      <button
+        id="menuToggle"
+        type="button"
+        aria-label="Fungua menyu"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+
+      <nav id="navMenu">
         <a href="index.html">Nyumbani</a>
         <a href="kuhusu.html">Kuhusu Sisi</a>
         <a href="wanachama.html">Wanachama</a>
         <a href="uongozi.html">Uongozi</a>
         <a href="shughuli.html">Shughuli</a>
         <a href="nyaraka.html">Nyaraka</a>
+        <a href="habari.html">Habari</a>
         <a href="jiunge.html">Jiunge</a>
       </nav>
+
     </div>
   </header>
 
-  <main class="container">
-    <section class="section">
+  <main class="join-container">
+
+    <section class="join-card">
+
       <h2>Jiunge na SJICHOSSO</h2>
-      <p>
-        Tunakukaribisha kuwasilisha maombi ya kujiunga
-        na SJICHOSSO. Tafadhali jaza taarifa zako kwa usahihi.
+
+      <p class="intro">
+        Karibu SJICHOSSO! Jaza taarifa zako hapa chini
+        ili kuwasilisha ombi la kujiunga na chama.
       </p>
-    </section>
 
-    <section class="section">
       <form id="joinForm">
-        <label for="fullName">Majina kamili</label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          placeholder="Andika majina yako"
-          required
+
+        <div class="form-group">
+          <label for="name">Majina kamili *</label>
+
+          <input
+            type="text"
+            id="name"
+            name="name"
+            maxlength="99"
+            placeholder="Andika majina yako kamili"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="college">Jina la chuo *</label>
+
+          <input
+            type="text"
+            id="college"
+            name="college"
+            maxlength="149"
+            placeholder="Andika jina la chuo"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="group">Kikundi</label>
+
+          <input
+            type="text"
+            id="group"
+            name="group"
+            maxlength="59"
+            placeholder="Andika jina la kikundi"
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="join-button"
         >
+          Wasilisha Maombi
+        </button>
 
-        <label for="phone">Namba ya simu</label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          placeholder="Mfano: 07XXXXXXXX"
-          required
-        >
+        <p id="formMessage" role="status" aria-live="polite"></p>
 
-        <label for="email">Barua pepe</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Mfano: jina@example.com"
-        >
-
-        <label for="location">Mahali unapoishi</label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          placeholder="Mkoa au wilaya"
-          required
-        >
-
-        <label for="occupation">Shughuli au kazi yako</label>
-        <input
-          type="text"
-          id="occupation"
-          name="occupation"
-          placeholder="Andika shughuli yako"
-        >
-
-        <label for="reason">Kwa nini ungependa kujiunga?</label>
-        <textarea
-          id="reason"
-          name="reason"
-          rows="4"
-          placeholder="Eleza kwa ufupi"
-        ></textarea>
-
-        <label class="consent">
-          <input type="checkbox" id="consent" required>
-          Nimehakikisha taarifa nilizojaza ni sahihi.
-        </label>
-
-        <button type="submit">Wasilisha Maombi</button>
       </form>
 
-      <p id="formMessage" role="status"></p>
     </section>
+
   </main>
 
   <footer>
     <p>&copy; 2026 SJICHOSSO. Haki zote zimehifadhiwa.</p>
   </footer>
 
-  <!-- Hifadhi app.js yako iliyopo; usiibadilishe bila kukagua Firebase handler. -->
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
+
 </body>
 </html>
