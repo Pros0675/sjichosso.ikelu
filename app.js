@@ -1,4 +1,8 @@
 
+// =====================================
+// SJICHOSSO - MOBILE NAVIGATION
+// =====================================
+
 const menuToggle = document.getElementById("menuToggle");
 const navMenu = document.getElementById("navMenu");
 
@@ -16,5 +20,26 @@ if (menuToggle && navMenu) {
       menuToggle.setAttribute("aria-expanded", "false");
       menuToggle.textContent = "☰";
     });
+  });
+}
+
+// =====================================
+// SJICHOSSO - MEMBERSHIP FORM
+// Firebase integration pending
+// =====================================
+
+const joinForm = document.getElementById("joinForm");
+const formMessage = document.getElementById("formMessage");
+
+if (joinForm) {
+  joinForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!joinForm.reportValidity()) return;
+
+    if (formMessage) {
+      formMessage.textContent =
+        "Fomu imejazwa. Mfumo wa kutuma maombi unasubiri kuunganishwa na Firebase.";
+    }
   });
 }
