@@ -1,31 +1,111 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="sw">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title data-en="Join – SJICHOSSO">Jiunge – SJICHOSSO</title>
-<meta name="description" content="Jisajili chuo chako kujiunga na SJICHOSSO.">
-<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;🇹🇿&lt;/text&gt;&lt;/svg&gt;">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Omba kujiunga na SJICHOSSO.">
+  <title>Jiunge na Sisi | SJICHOSSO</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<main>
-<section id="jiunge" style="padding-top:96px"><div class="wrap">
-<div class="card r" style="padding:48px">
-<div class="eyebrow">Jiunge</div><h2>Jisajili chuo chako</h2>
-<p class="lead">Jaza fomu hii ili chuo chako kiunganishwe na SJICHOSSO.</p>
-<form id="f">
-<div><label for="n">Jina lako</label><input id="n" required autocomplete="name"></div>
-<div><label for="c">Chuo</label><input id="c" required list="cl"><datalist id="cl"><option value="St. Augustine University"><option value="Mbeya University of Science and Technology"><option value="Teofilo Kisanji University"><option value="University of Dar es Salaam"><option value="Open University of Tanzania"></datalist></div>
-<div><label for="k">Kundi lako</label><select id="k"><option>Kiongozi wa wanafunzi</option><option>Mwanafunzi</option><option>Mwalimu / Mhadhiri</option></select></div>
-<button class="btn gold" type="submit">Tuma Ombi</button>
-<div id="ok" role="status"></div><div id="oe" role="alert" style="display:none;padding:18px;border-radius:14px;background:#B3261E;color:#fff;font-weight:600">Imeshindwa kutuma. Jaribu tena.</div>
-</form>
-</div></div></section>
-</main>
 
-</main>
-<script src="app.js?v=3"></script>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>SJICHOSSO</h1>
+      <p>Umoja, Ushirikiano na Maendeleo</p>
+
+      <nav>
+        <a href="index.html">Nyumbani</a>
+        <a href="kuhusu.html">Kuhusu Sisi</a>
+        <a href="wanachama.html">Wanachama</a>
+        <a href="uongozi.html">Uongozi</a>
+        <a href="shughuli.html">Shughuli</a>
+        <a href="nyaraka.html">Nyaraka</a>
+        <a href="jiunge.html">Jiunge</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h2>Jiunge na SJICHOSSO</h2>
+      <p>
+        Tunakukaribisha kuwasilisha maombi ya kujiunga
+        na SJICHOSSO. Tafadhali jaza taarifa zako kwa usahihi.
+      </p>
+    </section>
+
+    <section class="section">
+      <form id="joinForm">
+        <label for="fullName">Majina kamili</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          placeholder="Andika majina yako"
+          required
+        >
+
+        <label for="phone">Namba ya simu</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="Mfano: 07XXXXXXXX"
+          required
+        >
+
+        <label for="email">Barua pepe</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Mfano: jina@example.com"
+        >
+
+        <label for="location">Mahali unapoishi</label>
+        <input
+          type="text"
+          id="location"
+          name="location"
+          placeholder="Mkoa au wilaya"
+          required
+        >
+
+        <label for="occupation">Shughuli au kazi yako</label>
+        <input
+          type="text"
+          id="occupation"
+          name="occupation"
+          placeholder="Andika shughuli yako"
+        >
+
+        <label for="reason">Kwa nini ungependa kujiunga?</label>
+        <textarea
+          id="reason"
+          name="reason"
+          rows="4"
+          placeholder="Eleza kwa ufupi"
+        ></textarea>
+
+        <label class="consent">
+          <input type="checkbox" id="consent" required>
+          Nimehakikisha taarifa nilizojaza ni sahihi.
+        </label>
+
+        <button type="submit">Wasilisha Maombi</button>
+      </form>
+
+      <p id="formMessage" role="status"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 SJICHOSSO. Haki zote zimehifadhiwa.</p>
+  </footer>
+
+  <!-- Hifadhi app.js yako iliyopo; usiibadilishe bila kukagua Firebase handler. -->
+  <script src="app.js"></script>
 </body>
 </html>
