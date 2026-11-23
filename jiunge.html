@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-en="Join – SJICHOSSO">Jiunge – SJICHOSSO</title>
+<meta name="description" content="Jisajili chuo chako kujiunga na SJICHOSSO.">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;🇹🇿&lt;/text&gt;&lt;/svg&gt;">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<section id="jiunge" style="padding-top:96px"><div class="wrap">
+<div class="card r" style="padding:48px">
+<div class="eyebrow">Jiunge</div><h2>Jisajili chuo chako</h2>
+<p class="lead">Jaza fomu hii ili chuo chako kiunganishwe na SJICHOSSO.</p>
+<form id="f">
+<div><label for="n">Jina lako</label><input id="n" required autocomplete="name"></div>
+<div><label for="c">Chuo</label><input id="c" required list="cl"><datalist id="cl"><option value="St. Augustine University"><option value="Mbeya University of Science and Technology"><option value="Teofilo Kisanji University"><option value="University of Dar es Salaam"><option value="Open University of Tanzania"></datalist></div>
+<div><label for="k">Kundi lako</label><select id="k"><option>Kiongozi wa wanafunzi</option><option>Mwanafunzi</option><option>Mwalimu / Mhadhiri</option></select></div>
+<button class="btn gold" type="submit">Tuma Ombi</button>
+<div id="ok" role="status"></div><div id="oe" role="alert" style="display:none;padding:18px;border-radius:14px;background:#B3261E;color:#fff;font-weight:600">Imeshindwa kutuma. Jaribu tena.</div>
+</form>
+</div></div></section>
+</main>
+
+</main>
+<script src="app.js"></script>
+</body>
+</html>
