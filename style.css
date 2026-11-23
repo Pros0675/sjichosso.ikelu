@@ -100,3 +100,12 @@ nav a{color:var(--ink);font-weight:500}nav a:hover{color:var(--acc)}nav a.cur{co
 .fg2{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr;gap:32px}@media(max-width:820px){.fg2{grid-template-columns:1fr}}
 .sl{font-style:italic;color:#F2B705;margin-top:12px}.ql{display:flex;flex-wrap:wrap;gap:6px 0}.ql a{color:#A9B6C8;text-decoration:none;padding:0 10px;border-left:1px solid #2C4468}.ql a:first-child{padding-left:0;border:0}
 .lf{display:flex;gap:10px;align-items:center;color:#fff}.lf .lt small{color:#A9B6C8}
+.hero2 h1{font-size:clamp(30px,4.3vw,52px)}.hl{max-width:56%}
+.hp svg{bottom:84px;width:min(360px,74%)}
+.ql{gap:8px 0}.ql a{padding:0 14px 0 0;border:0}
+.btn span[aria-hidden]{margin-left:6px}
+@media(max-width:820px){.hl{max-width:none}.hp svg{bottom:0;width:min(300px,70%)}}
+.fg2>div{min-width:0}.fg2{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr)}@media(max-width:820px){.fg2{grid-template-columns:minmax(0,1fr)}}
+.hero2 h1{font-size:clamp(28px,4vw,50px)}.hl{max-width:58%}
+@media(max-width:820px){.hl{max-width:none}}
+.dc svg{display:block;margin:0 auto 8px}
