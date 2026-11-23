@@ -1,416 +1,102 @@
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-// ==========================================
-// FIREBASE CONFIGURATION
-// ==========================================
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA6JJ8SIdb3-ZXhv_hYy0oyuYCECLQRHVg",
-  authDomain: "sjichosso.firebaseapp.com",
-  projectId: "sjichosso",
-  storageBucket: "sjichosso.firebasestorage.app",
-  messagingSenderId: "849406364609",
-  appId: "1:849406364609:web:16fb63a57207fbe0e8fd40"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-// Barua pepe inayoruhusiwa na Firestore Rules
-const ADMIN_EMAIL = "BARUA@PEPE.COM";
-
-// ==========================================
-// MOBILE NAVIGATION
-// ==========================================
-
-const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
-
-if (menuToggle && navMenu) {
-  menuToggle.addEventListener("click", () => {
-    const isOpen = navMenu.classList.toggle("active");
-
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-    menuToggle.textContent = isOpen ? "✕" : "☰";
-  });
-
-  navMenu.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("active");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.textContent = "☰";
-    });
-  });
-}
-
-// ==========================================
-// MEMBERSHIP REGISTRATION
-// ==========================================
-
-const joinForm = document.getElementById("joinForm");
-const formMessage = document.getElementById("formMessage");
-
-if (joinForm) {
-  joinForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    if (!joinForm.reportValidity()) return;
-
-    const submitButton = joinForm.querySelector(
-      'button[type="submit"]'
-    );
-
-    const name = joinForm.elements["name"].value.trim();
-    const college = joinForm.elements["college"].value.trim();
-    const group = joinForm.elements["group"].value.trim();
-
-    if (
-      !name ||
-      name.length >= 100 ||
-      !college ||
-      college.length >= 150 ||
-      group.length >= 60
-    ) {
-      formMessage.textContent =
-        "Tafadhali hakikisha taarifa zako zimejazwa kwa usahihi.";
-      return;
-    }
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Inatuma maombi...";
-    formMessage.textContent = "";
-
-    try {
-      await addDoc(collection(db, "registrations"), {
-        name,
-        college,
-        group,
-        at: serverTimestamp()
-      });
-
-      formMessage.textContent =
-        "Hongera! Maombi yako yametumwa kikamilifu.";
-
-      formMessage.className = "success-message";
-      joinForm.reset();
-
-    } catch (error) {
-      console.error("Registration error:", error);
-
-      formMessage.textContent =
-        "Imeshindikana kutuma maombi. Tafadhali jaribu tena.";
-
-      formMessage.className = "error-message";
-
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "Wasilisha Maombi";
-    }
-  });
-}
-
-// ==========================================
-// ADMIN DASHBOARD ELEMENTS
-// ==========================================
-
-const loginSection = document.getElementById("loginSection");
-const dashboardSection = document.getElementById("dashboardSection");
-
-const adminLoginForm = document.getElementById("adminLoginForm");
-const loginMessage = document.getElementById("loginMessage");
-const loginButton = document.getElementById("loginButton");
-
-const logoutButton = document.getElementById("logoutButton");
-const adminIdentity = document.getElementById("adminIdentity");
-
-const registrationsTable =
-  document.getElementById("registrationsTable");
-
-const registrationCount =
-  document.getElementById("registrationCount");
-
-const dashboardMessage =
-  document.getElementById("dashboardMessage");
-
-const registrationSearch =
-  document.getElementById("registrationSearch");
-
-const refreshButton =
-  document.getElementById("refreshButton");
-
-let allRegistrations = [];
-
-// ==========================================
-// ADMIN LOGIN
-// ==========================================
-
-if (adminLoginForm) {
-  adminLoginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = document
-      .getElementById("adminEmail")
-      .value.trim()
-      .toLowerCase();
-
-    const password =
-      document.getElementById("adminPassword").value;
-
-    if (email !== ADMIN_EMAIL.toLowerCase()) {
-      loginMessage.textContent =
-        "Akaunti hii haina ruhusa ya kuingia kama admin.";
-      return;
-    }
-
-    loginButton.disabled = true;
-    loginButton.textContent = "Inaingia...";
-    loginMessage.textContent = "";
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      adminLoginForm.reset();
-
-    } catch (error) {
-      console.error("Login error:", error);
-
-      loginMessage.textContent =
-        "Imeshindikana kuingia. Hakikisha email na password ni sahihi.";
-
-    } finally {
-      loginButton.disabled = false;
-      loginButton.textContent = "Ingia";
-    }
-  });
-}
-
-// ==========================================
-// CHECK AUTHENTICATION STATUS
-// ==========================================
-
-if (loginSection && dashboardSection) {
-  onAuthStateChanged(auth, async (user) => {
-    if (user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      loginSection.classList.add("hidden");
-      dashboardSection.classList.remove("hidden");
-
-      adminIdentity.textContent =
-        "Umeingia kama: " + user.email;
-
-      await loadRegistrations();
-
-    } else {
-      dashboardSection.classList.add("hidden");
-      loginSection.classList.remove("hidden");
-
-      if (user) {
-        await signOut(auth);
-        loginMessage.textContent =
-          "Akaunti hii hairuhusiwi kufungua dashboard.";
-      }
-    }
-  });
-}
-
-// ==========================================
-// LOAD REGISTRATIONS FROM FIRESTORE
-// ==========================================
-
-async function loadRegistrations() {
-  if (!registrationsTable) return;
-
-  dashboardMessage.textContent = "Inapakia maombi...";
-  registrationsTable.replaceChildren();
-
-  try {
-    const snapshot = await getDocs(
-      collection(db, "registrations")
-    );
-
-    allRegistrations = snapshot.docs.map(item => ({
-      id: item.id,
-      ...item.data()
-    }));
-
-    allRegistrations.sort((a, b) => {
-      const dateA = a.at?.toMillis?.() ?? 0;
-      const dateB = b.at?.toMillis?.() ?? 0;
-      return dateB - dateA;
-    });
-
-    registrationCount.textContent =
-      String(allRegistrations.length);
-
-    renderRegistrations(allRegistrations);
-
-    dashboardMessage.textContent =
-      allRegistrations.length
-        ? "Maombi yamepakuliwa kikamilifu."
-        : "Bado hakuna maombi yaliyopokelewa.";
-
-  } catch (error) {
-    console.error("Loading registrations error:", error);
-
-    dashboardMessage.textContent =
-      "Imeshindikana kupakua maombi. Kagua ruhusa za Firestore.";
-  }
-}
-
-// ==========================================
-// DISPLAY REGISTRATIONS
-// ==========================================
-
-function renderRegistrations(records) {
-  if (!registrationsTable) return;
-
-  registrationsTable.replaceChildren();
-
-  if (records.length === 0) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-
-    cell.colSpan = 6;
-    cell.textContent = "Hakuna maombi yanayolingana na utafutaji.";
-
-    row.appendChild(cell);
-    registrationsTable.appendChild(row);
-    return;
-  }
-
-  records.forEach((record, index) => {
-    const row = document.createElement("tr");
-
-    const values = [
-      String(index + 1),
-      record.name || "",
-      record.college || "",
-      record.group || "",
-      record.at?.toDate
-        ? record.at.toDate().toLocaleString("sw-TZ")
-        : "Muda haujapatikana"
-    ];
-
-    values.forEach(value => {
-      const cell = document.createElement("td");
-      cell.textContent = value;
-      row.appendChild(cell);
-    });
-
-    const actionCell = document.createElement("td");
-    const deleteButton = document.createElement("button");
-
-    deleteButton.type = "button";
-    deleteButton.textContent = "Futa";
-    deleteButton.className = "admin-button delete-button";
-
-    deleteButton.addEventListener("click", () => {
-      deleteRegistration(record.id, deleteButton);
-    });
-
-    actionCell.appendChild(deleteButton);
-    row.appendChild(actionCell);
-
-    registrationsTable.appendChild(row);
-  });
-}
-
-// ==========================================
-// SEARCH REGISTRATIONS
-// ==========================================
-
-if (registrationSearch) {
-  registrationSearch.addEventListener("input", () => {
-    const term = registrationSearch.value
-      .trim()
-      .toLowerCase();
-
-    const filtered = allRegistrations.filter(record => {
-      const name = (record.name || "").toLowerCase();
-      const college = (record.college || "").toLowerCase();
-      const group = (record.group || "").toLowerCase();
-
-      return (
-        name.includes(term) ||
-        college.includes(term) ||
-        group.includes(term)
-      );
-    });
-
-    renderRegistrations(filtered);
-  });
-}
-
-// ==========================================
-// DELETE REGISTRATION
-// ==========================================
-
-async function deleteRegistration(id, button) {
-  const confirmed = window.confirm(
-    "Una uhakika unataka kufuta ombi hili?"
-  );
-
-  if (!confirmed) return;
-
-  button.disabled = true;
-  button.textContent = "Inafuta...";
-
-  try {
-    await deleteDoc(doc(db, "registrations", id));
-
-    dashboardMessage.textContent =
-      "Ombi limefutwa kikamilifu.";
-
-    await loadRegistrations();
-
-  } catch (error) {
-    console.error("Delete error:", error);
-
-    dashboardMessage.textContent =
-      "Imeshindikana kufuta ombi. Hakikisha una ruhusa za admin.";
-
-    button.disabled = false;
-    button.textContent = "Futa";
-  }
-}
-
-// ==========================================
-// REFRESH DASHBOARD
-// ==========================================
-
-if (refreshButton) {
-  refreshButton.addEventListener("click", loadRegistrations);
-}
-
-// ==========================================
-// ADMIN LOGOUT
-// ==========================================
-
-if (logoutButton) {
-  logoutButton.addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Logout error:", error);
-      dashboardMessage.textContent =
-        "Imeshindikana kutoka. Jaribu tena.";
-    }
-  });
-}
+(function(){
+'use strict';
+var SJ=window.SJ||{},C=SJ.contact||{},SO=SJ.social||{},IM=SJ.images||{},DC=SJ.docs||{};
+var L='sw';try{L=localStorage.getItem('lg')||'sw'}catch(e){}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function tx(sw,en){return '<span data-sw="'+esc(sw)+'" data-en="'+esc(en)+'">'+esc(L=='en'?en:sw)+'</span>'}
+var D={"Ruka hadi maudhui": "Skip to content", "Uongozi": "Leadership", "Shughuli": "Activities", "© 2026 SJICHOSSO. Haki zote zimehifadhiwa.": "© 2026 SJICHOSSO. All rights reserved.", "[anuani]": "[address]", "Kuhusu SJICHOSSO": "About SJICHOSSO", "Muungano wa sauti za wanafunzi.": "An alliance of student voices.", "Soma zaidi": "Read more", "Angalia wanachama wote →": "See all members →", "Angalia viongozi wote →": "See all leaders →", "Habari na Matukio": "News and Events", "Angalia zote": "View all", "Habari na matangazo ya SJICHOSSO yatachapishwa hapa.": "SJICHOSSO news and announcements will be published here.", "Tunajenga sauti moja ya wanafunzi wa vyuo vyote Tanzania.": "We are building one voice for the students of all colleges in Tanzania.", "Dira, dhamira na historia": "Vision, mission and history", "Dira": "Vision", "Dhamira": "Mission", "Historia": "History", "[Dira ya SJICHOSSO itawekwa hapa.]": "[SJICHOSSO’s vision will be added here.]", "[Dhamira ya SJICHOSSO itawekwa hapa.]": "[SJICHOSSO’s mission will be added here.]", "[Historia ya SJICHOSSO itawekwa hapa.]": "[SJICHOSSO’s history will be added here.]", "Viongozi wanaowakilisha sauti ya wanafunzi.": "Leaders who represent the student voice.", "Majina na picha za viongozi zitawekwa na uongozi.": "Leaders’ names and photos will be added by the leadership.", "Nafasi ya wanafunzi kujifunza, kujadili na kukuza maarifa pamoja.": "A space for students to learn, discuss and grow their knowledge together.", "Kuhamasisha afya, ustawi na usawa miongoni mwa wanafunzi.": "Promoting health, wellbeing and equality among students.", "Kuonyesha vipaji na kuenzi utamaduni wetu.": "Showcasing talent and celebrating our culture.", "Kujenga afya, ushirikiano na mshikamano kupitia michezo.": "Building health, teamwork and solidarity through sport.", "[Maelezo ya kina yatawekwa na uongozi.]": "[Detailed information will be added by the leadership.]", "Nyaraka rasmi za SJICHOSSO zitapatikana hapa mara zitakapochapishwa.": "Official SJICHOSSO documents will be available here once published.", "Mwongozo mkuu wa uendeshaji wa SJICHOSSO.": "The main guiding document for how SJICHOSSO operates.", "Maadili na mwenendo unaotarajiwa kwa viongozi na wanachama.": "Expected ethics and conduct for leaders and members.", "Ratiba ya shughuli na matukio ya mwaka.": "Schedule of the year’s activities and events.", "Mashirika ya wanafunzi yaliyoorodheshwa kwa sasa.": "Student organisations currently listed.", "Vyuo vilivyoorodheshwa": "Colleges listed", "Habari, matangazo na matukio ya SJICHOSSO.": "SJICHOSSO news, announcements and events.", "Matangazo": "Announcements", "Jina kamili": "Full name", "Barua pepe": "Email", "Namba ya simu (si lazima)": "Phone number (optional)", "Kwa nini ujiunge?": "Why join?", "Ukurasa haujapatikana": "Page not found", "Ukurasa uliotafuta haupo au umehamishwa.": "The page you looked for does not exist or has moved.", "Rudi Mwanzo": "Back to Home","Mwanzo": "Home", "Kuhusu Sisi": "About Us", "Jiunge Nasi": "Join Us", "Umoja • Uongozi • Maendeleo": "Unity • Leadership • Progress", "Jukwaa la umoja, uwakilishi na maendeleo ya wanafunzi.": "A platform for student unity, representation and progress.", "Uwakilishi": "Representation", "Kusimamia maslahi ya wanafunzi katika ngazi zote.": "Championing student interests at every level.", "Umoja": "Unity", "Kujenga mshikamano miongoni mwa wanafunzi.": "Building solidarity among students.", "Uwajibikaji": "Accountability", "Kuhakikisha uwazi na uwajibikaji katika uongozi.": "Ensuring transparency and accountability in leadership.", "Shughuli Zetu": "Our Activities", "Vilabu vya Kitaaluma": "Academic Clubs", "Afya na Jinsia": "Health and Gender", "Sanaa na Utamaduni": "Arts and Culture", "Viongozi Wetu": "Our Leaders", "Makamu wa Rais": "Vice President", "Mweka Hazina": "Treasurer", "Nyaraka Muhimu": "Key Documents", "Katiba": "Constitution", "Kalenda ya Mwaka": "Yearly Calendar", "Sauti yako ina nafasi.": "Your voice matters.", "Jiunge na SJICHOSSO leo kwa ajili ya mustakabali bora wa wanafunzi.": "Join SJICHOSSO today for a better future for students.", "Sauti Moja, Maono Moja": "One Voice, One Vision", "Viungo vya Haraka": "Quick Links", "Wasiliana Nasi": "Contact Us", "“Umoja wetu, nguvu yetu.”": "“Our unity, our strength.”",'Nyumbani':'Home','Kuhusu':'About','Imeshindwa. Jaribu tena.':'Failed. Please try again.','Imeshindwa kutuma. Jaribu tena.':'Could not send. Please try again.','Athari yetu':'Our impact','Mabadiliko yanayopimika.':'Measurable change.','Picha yako hapa':'Your photo here','Mhazini':'Treasurer','Mratibu wa Habari':'Publicity Coordinator','Mratibu wa Michezo':'Sports Coordinator','Mratibu wa Afya na Jinsia':'Health and Gender Coordinator','Mratibu wa Sanaa':'Arts Coordinator','Zote':'All','Matukio':'Events','Habari':'News','Habari kuu':'Top story','Mkutano wa kwanza wa vyuo wanachama':'First meeting of member colleges','Viongozi wa wanafunzi wanakutana kuunganisha sauti za vyuo vyote nchini.':'Student leaders meet to unite the voices of colleges across the country.','Pata habari':'Stay informed','Asante! Utapokea habari zetu.':'Thank you! You will receive our news.','Mawasiliano':'Contact','[barua pepe]':'[email]','Shughuli na vilabu':'Activities and clubs','Zaidi ya uongozi: maisha ya chuo.':'More than leadership: campus life.','Vilabu vinavyojenga vipaji, afya na ushirikiano wa wanafunzi.':'Clubs that build talent, health and student cooperation.','Vilabu vya masomo':'Academic clubs','Midahalo, lugha na historia kukuza maarifa ya wanafunzi.':'Debates, languages and history to grow students’ knowledge.','Jinsia na afya':'Gender and health','Elimu rika, usawa wa kijinsia na ustawi wa akili na mwili.':'Peer education, gender equality and mental and physical wellbeing.','Sanaa':'Arts','Maigizo, muziki na ubunifu wa kuonyesha vipaji.':'Theatre, music and creativity to showcase talent.','Michezo':'Sports','Mpira wa miguu, kikapu, wavu na riadha kati ya vyuo.':'Football, basketball, volleyball and athletics between colleges.','Wanaoongoza sauti ya wanafunzi.':'Leading the student voice.','Katibu Mkuu':'Secretary General','[Jina la kiongozi]':'[Leader’s name]','[namba ya simu]':'[phone number]','Maswali yanayoulizwa':'FAQ','SJICHOSSO ni nini?':'What is SJICHOSSO?','Muungano wa viongozi wa wanafunzi wa vyuo vya Tanzania wenye sauti moja.':'An alliance of student leaders from Tanzanian colleges speaking with one voice.','Nani anaweza kujiunga?':'Who can join?','Umoja wa wanafunzi wa chuo chochote, ukiwakilishwa na viongozi wake.':'The students’ union of any college, represented by its leaders.','Nawezaje kuwasilisha kero?':'How do I raise a concern?','Kupitia kiongozi wa chuo chako, au kwenye mijadala ya wazi ya vyuo.':'Through your college leader, or at the open college debates.','Nyaraka':'Documents','Katiba ya SJICHOSSO':'SJICHOSSO Constitution','Kanuni za Maadili':'Code of Ethics','Kalenda ya mwaka':'Yearly calendar','Inakuja':'Coming soon','Majina, namba na majibu ni mfano; yajaze kabla ya kutumia rasmi.':'Names, numbers and answers are samples; fill them in before official use.','Mawasiliano: [barua pepe] · [namba ya simu] · [Instagram]':'Contact: [email] · [phone number] · [Instagram]','Wanachama':'Members','Mashirika wanachama':'Member unions','Sauti za wanafunzi, chuo kwa chuo.':'Student voices, college by college.','Kila chuo kina umoja wake wa wanafunzi. SJICHOSSO unawaunganisha wote.':'Every college has its own students’ union. SJICHOSSO connects them all.','Wote':'All','Umma':'Public','Binafsi':'Private','Orodha hii ni baadhi ya wanachama.':'This list shows some of the members.','Muundo':'Structure','Misingi':'Principles','Washauri':'Advisors','Jiunge Sasa':'Join Now','TANZANIA · UMOJA WA VYUO':'TANZANIA · UNITY OF COLLEGES','Sauti Moja. Maono Moja.':'One Voice. One Vision.','Uongozi wa Wanafunzi.':'Student Leadership.','SJICHOSSO ni taasisi ya ushirikiano wa viongozi wa wanafunzi wa vyuo vyote nchini Tanzania. Kila chuo, kila mwanafunzi, sauti moja.':'SJICHOSSO is an alliance of student leaders from every college in Tanzania. Every college, every student, one voice.','Jisajili Chuo Chako':'Register Your College','Jifunze Zaidi':'Learn More','Sauti ya pamoja':'A shared voice','Maono ya pamoja':'A shared vision','Uongozi wa wanafunzi':'Student leadership','Vyuo':'Colleges','Viongozi':'Leaders','Wanafunzi':'Students','Vyuo na mashirika kwenye orodha ni halisi; namba nyingine, tarehe na nukuu ni vya mfano.':'The colleges and unions listed are real; other numbers, dates and the quote are samples.','Muundo wa ushiriki':'Participation structure','Makundi matatu, lengo moja.':'Three groups, one goal.','Chagua kundi ili uone nafasi yake ndani ya SJICHOSSO.':'Pick a group to see its role in SJICHOSSO.','Viongozi wa wanafunzi':'Student leaders','Wanafunzi wote':'All students','Walimu na wahadhiri':'Teachers and lecturers','Hawa ndio moyo wa uongozi rasmi wa SJICHOSSO na wana mamlaka ya maamuzi ya umoja.':'They are the heart of SJICHOSSO’s official leadership and hold the power to make unity decisions.','Uongozi rasmi':'Official leadership','Rais':'President','Makamu wa rais':'Vice president','Mawaziri':'Ministers','Wawakilishi wa vyuo':'College representatives','Kila mwanafunzi ana sauti. Hapa ndipo maoni na kero huanzia.':'Every student has a voice. This is where feedback and concerns begin.','Wanachama washiriki':'Participating members','Kutoa maoni':'Give feedback','Kuwasilisha kero':'Raise concerns','Kushiriki mijadala':'Join discussions','Wanatoa mwongozo bila kuingilia uchaguzi wa viongozi wa wanafunzi.':'They offer guidance without interfering in the election of student leaders.','Washauri na wadau':'Advisors and stakeholders','Ushauri':'Advice','Tafiti':'Research','Kusaidia kutatua changamoto':'Helping solve challenges','Misingi yetu':'Our principles','Jambo muhimu la kulinda':'What we must protect','Walimu wasiwe na mamlaka ya kuchagua viongozi wa wanafunzi.':'Teachers must not have the power to choose student leaders.','Viongozi wa wanafunzi wabaki na mamlaka ya maamuzi ya umoja.':'Student leaders keep the power of unity decisions.','Walimu wawe na nafasi ya ushauri na ushirikiano.':'Teachers have a role in advice and collaboration.','Kila kundi liwe na akaunti na ruhusa zake kwenye website.':'Each group has its own account and permissions on the website.','Picha za mfano':'Sample pictures','Maisha ya SJICHOSSO':'Life at SJICHOSSO','Mkutano Mkuu':'General Assembly','Mafunzo ya Uongozi':'Leadership Training','Mahafali na Mijadala':'Graduations and Debates','Habari na matukio':'News and events','Mkutano Mkuu wa Viongozi':'Leaders’ General Assembly','Viongozi wa vyuo wanakutana kupanga mwelekeo wa mwaka.':'College leaders meet to plan the year’s direction.','Mentorship kutoka kwa Former Student Leaders na wahadhiri.':'Mentorship from Former Student Leaders and lecturers.','Mjadala wa Vyuo':'College Debate','Wanafunzi wanawasilisha kero na maoni yao hadharani.':'Students present their concerns and views openly.','DES':'DEC','“Tukiwa na sauti moja, hakuna kero ya mwanafunzi itakayobaki bila jibu.”':'“With one voice, no student’s concern will go unanswered.”','Jina la Kiongozi · Rais wa SJICHOSSO (mfano)':'Leader’s Name · President of SJICHOSSO (sample)','Kitengo':'Unit','Uzoefu unaoongoza maono.':'Experience that guides the vision.','Kitengo cha kuwajumuisha wahadhiri, wataalamu na wadau wa elimu, kwa ushauri wa kimkakati.':'A unit bringing together lecturers, experts and education stakeholders for strategic advice.','Viongozi wa zamani wa wanafunzi kama washauri wa umoja, wenye uzoefu mkubwa katika uendeshaji wa uongozi.':'Former student leaders as advisors to the alliance, with deep experience in running leadership.','Jiunge':'Join','Jisajili chuo chako':'Register your college','Jaza fomu hii ili chuo chako kiunganishwe na SJICHOSSO.':'Fill in this form to connect your college to SJICHOSSO.','Jina lako':'Your name','Chuo':'College','Kundi lako':'Your group','Kiongozi wa wanafunzi':'Student leader','Mwanafunzi':'Student','Mwalimu / Mhadhiri':'Teacher / Lecturer','Tuma Ombi':'Send Request'};
+/* ---------- header & footer ---------- */
+var PG=[['index.html','Mwanzo'],['kuhusu.html','Kuhusu Sisi'],['uongozi.html','Uongozi'],['shughuli.html','Shughuli'],['wanachama.html','Wanachama'],['habari.html','Habari'],['nyaraka.html','Nyaraka']];
+var logo=IM.logo?'<img class="logoimg" src="'+esc(IM.logo)+'" alt="" width="40" height="40">':'<span class="mark"></span>';
+var HEADER='<a class="skip" href="#main">Ruka hadi maudhui</a><header><div class="wrap nav"><a class="logo" href="index.html" aria-label="SJICHOSSO">'+logo+'<span class="lt"><b>SJICHOSSO</b><small>Sauti Moja, Maono Moja</small></span></a><button id="th" class="lb t" aria-label="Theme"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button><button id="lang" class="lb" aria-label="Change language">EN</button><button id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu">\u2630</button><nav id="menu" aria-label="Menu">'+PG.map(function(p){return '<a href="'+p[0]+'">'+p[1]+'</a>'}).join('')+'<a class="btn gold" href="jiunge.html">Jiunge Nasi</a></nav></div></header>';
+var ICON={instagram:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>',x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20"/></svg>',youtube:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/></svg>',facebook:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg>'};
+var NM={instagram:'Instagram',x:'X',youtube:'YouTube',facebook:'Facebook'};
+var socials='<div class="so">'+Object.keys(ICON).map(function(k){return SO[k]?'<a href="'+esc(SO[k])+'" target="_blank" rel="noopener noreferrer" aria-label="'+NM[k]+'">'+ICON[k]+'</a>':'<span class="off" role="img" aria-label="'+NM[k]+'" title="Link itawekwa">'+ICON[k]+'</span>'}).join('')+'</div>';
+var em=C.email?'<a href="mailto:'+esc(C.email)+'">'+esc(C.email)+'</a>':'<span class="pl">[barua pepe]</span>';
+var ph=C.phone?'<a href="tel:'+esc(String(C.phone).replace(/[^\d+]/g,''))+'">'+esc(C.phone)+'</a>':'<span class="pl">[namba ya simu]</span>';
+var ad=C.address?'<span>'+esc(C.address)+'</span>':'<span class="pl">[anuani]</span>';
+var FOOTER='<footer><div class="wrap"><div class="fg2"><div><div class="lf">'+logo+'<span class="lt"><b>SJICHOSSO</b><small>Sauti Moja, Maono Moja</small></span></div><p class="sl">\u201cUmoja wetu, nguvu yetu.\u201d</p></div><div><b>Viungo vya Haraka</b><p class="ql">'+PG.map(function(p){return '<a href="'+p[0]+'">'+p[1]+'</a>'}).join('')+'<a href="jiunge.html">Jiunge Nasi</a></p></div><div><b>Wasiliana Nasi</b><p>'+em+'</p><p>'+ph+'</p><p>'+ad+'</p>'+socials+'</div><div><b>Pata habari</b><form id="nf" novalidate><input type="email" id="ne-in" required maxlength="200" autocomplete="email" aria-label="Email"><button class="btn gold" type="submit">Jiunge</button></form><p id="nk" style="display:none;color:#F2B705">Asante! Utapokea habari zetu.</p><p id="ne" role="alert" style="display:none;color:#FFB4A9"></p></div></div><div class="cp">\u00a9 2026 SJICHOSSO. Haki zote zimehifadhiwa.</div></div></footer>';
+document.body.insertAdjacentHTML('afterbegin',HEADER);document.body.insertAdjacentHTML('beforeend',FOOTER);
+var cur=location.pathname.split('/').pop()||'index.html';
+document.querySelectorAll('#menu a,.ql a').forEach(function(a){if(a.getAttribute('href')==cur){a.classList.add('cur');a.setAttribute('aria-current','page')}});
+/* ---------- menu ---------- */
+var m=document.getElementById('menu'),bg=document.getElementById('burger');
+function openMenu(o){m.classList.toggle('open',o);bg.setAttribute('aria-expanded',o?'true':'false')}
+bg.onclick=function(){openMenu(!m.classList.contains('open'))};
+m.addEventListener('click',function(e){if(e.target.tagName=='A')openMenu(false)});
+document.addEventListener('keydown',function(e){if(e.key=='Escape')openMenu(false)});
+/* ---------- tabs, reveal, counters ---------- */
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected','false')});
+t.setAttribute('aria-selected','true');
+document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+document.getElementById(t.dataset.p).classList.add('on')}});
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+if('IntersectionObserver' in window&&!reduce){var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12});document.querySelectorAll('.r').forEach(function(x){io.observe(x)})}else{document.querySelectorAll('.r').forEach(function(x){x.classList.add('in')})}
+document.querySelectorAll('[data-n]').forEach(function(el){var t=+el.dataset.n;if(reduce){el.textContent=t.toLocaleString()+'+';return}var s=0,id=setInterval(function(){s+=Math.ceil(t/40);if(s>=t){s=t;clearInterval(id)}el.textContent=s.toLocaleString()+'+'},30)});
+/* ---------- images (set in config.js) ---------- */
+document.querySelectorAll('[data-img]').forEach(function(b){var f=IM[b.dataset.img];if(!f)return;var i=new Image();i.alt=b.dataset.alt||'';i.decoding='async';if(b.dataset.img==='hero'){i.fetchPriority='high'}else{i.loading='lazy'}i.onerror=function(){i.remove()};i.src=f;b.appendChild(i)});
+/* ---------- documents (set in config.js) ---------- */
+document.querySelectorAll('[data-doc]').forEach(function(c){var f=DC[c.dataset.doc];if(!f)return;c.classList.add('ok');var da=c.querySelector('.da');
+if(da){da.innerHTML='<a class="dbtn" href="'+esc(f)+'" target="_blank" rel="noopener">'+tx('Fungua','Open')+'</a><a class="dbtn g" href="'+esc(f)+'" download>'+tx('Pakua','Download')+'</a>'}
+else{c.href=f;c.target='_blank';c.rel='noopener';var s=c.querySelector('small');if(s)s.innerHTML=tx('Fungua','Open')}});
+/* ---------- translation ---------- */
+var TT=document.querySelector('title');TT.dataset.sw=TT.textContent;
+var N=[],W=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+while(W.nextNode()){var nd=W.currentNode,tx0=nd.nodeValue.trim();if(tx0&&nd.parentNode.tagName!='SCRIPT'&&Object.prototype.hasOwnProperty.call(D,tx0))N.push([nd,nd.nodeValue,tx0])}
+function S(l){L=l;N.forEach(function(x){x[0].nodeValue=l=='en'?x[1].replace(x[2],D[x[2]]):x[1]});
+document.querySelectorAll('[data-sw]').forEach(function(e){e.textContent=l=='en'?e.dataset.en:e.dataset.sw});
+document.documentElement.lang=l;document.title=l=='en'?TT.dataset.en:TT.dataset.sw;
+bg.setAttribute('aria-label',l=='en'?'Open menu':'Fungua menyu');document.getElementById('th').setAttribute('aria-label',l=='en'?'Toggle theme':'Badilisha mandhari');
+document.getElementById('lang').textContent=l=='en'?'SW':'EN';document.getElementById('lang').setAttribute('aria-label',l=='en'?'Badilisha lugha: Kiswahili':'Change language: English');
+try{localStorage.setItem('lg',l)}catch(e){}renderNews()}
+/* ---------- news (news.json) ---------- */
+var NEWS=[],NFLT='all';
+function safeUrl(u){return /^(https?:\/\/|[\w\-.\/]+$)/.test(u||'')}
+function renderNews(){var box=document.querySelector('[data-news]');if(!box)return;var max=+box.dataset.news||999;
+var items=NEWS.filter(function(n){return NFLT=='all'||n.aina==NFLT}).sort(function(a,b){return (b.tarehe||'')>(a.tarehe||'')?1:-1}).slice(0,max);
+if(!items.length){box.innerHTML='<div class="empty">'+tx('Habari na matangazo ya SJICHOSSO yatachapishwa hapa.','SJICHOSSO news and announcements will be published here.')+'</div>';return}
+box.innerHTML=items.map(function(n){var en=L=='en',t=en&&n.kichwa_en?n.kichwa_en:n.kichwa,s=en&&n.muhtasari_en?n.muhtasari_en:n.muhtasari;
+var cat={habari:['Habari','News'],tangazo:['Tangazo','Announcement'],tukio:['Tukio','Event']}[n.aina]||['Habari','News'];
+var d='';if(n.tarehe){var dt=new Date(n.tarehe+'T00:00:00');if(!isNaN(dt))d=dt.toLocaleDateString(en?'en-GB':'sw-TZ',{day:'numeric',month:'long',year:'numeric'})}
+var h='<article class="nc"><div class="meta"><span class="badge">'+(en?cat[1]:cat[0])+'</span><span>'+esc(d)+'</span></div><h3>'+esc(t||'')+'</h3>'+(s?'<p>'+esc(s)+'</p>':'');
+if(n.kiungo&&safeUrl(n.kiungo))h+='<a class="more" href="'+esc(n.kiungo)+'">'+(en?'Read more':'Soma zaidi')+' \u2192</a>';return h+'</article>'}).join('')}
+if(document.querySelector('[data-news]')){fetch('news.json').then(function(r){return r.ok?r.json():[]}).then(function(d){NEWS=Array.isArray(d)?d:[];renderNews()}).catch(function(){renderNews()})}
+document.getElementById('lang').onclick=function(){S(L=='en'?'sw':'en')};S(L);
+document.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){document.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-selected','false')});c.setAttribute('aria-selected','true');document.querySelectorAll('.mc').forEach(function(m){m.style.display=(c.dataset.f=='all'||m.dataset.c==c.dataset.f)?'':'none'})}});
+document.querySelectorAll('.fc').forEach(function(c){c.onclick=function(){document.querySelectorAll('.fc').forEach(function(x){x.setAttribute('aria-selected','false')});c.setAttribute('aria-selected','true');NFLT=c.dataset.f;renderNews()}});
+/* ---------- theme ---------- */
+var R=document.documentElement;try{var tt=localStorage.getItem('th');if(tt)R.dataset.theme=tt}catch(e){}
+document.getElementById('th').onclick=function(){var d=R.dataset.theme?R.dataset.theme=='dark':matchMedia('(prefers-color-scheme: dark)').matches;R.dataset.theme=d?'light':'dark';try{localStorage.setItem('th',R.dataset.theme)}catch(e){}};
+/* ---------- Firebase ---------- */
+var FB={apiKey:'AIzaSyA6JJ8SIdb3-ZXhv_hyY0oyuYCECLQRHVg',authDomain:'sjichosso.firebaseapp.com',projectId:'sjichosso',storageBucket:'sjichosso.firebasestorage.app',messagingSenderId:'849406364609',appId:'1:849406364609:web:16fb63a57207fbe0e8fd40'},fsP=null;
+function fs(){if(!fsP)fsP=Promise.all([import('https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js'),import('https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js')]).then(function(m){return{db:m[1].getFirestore(m[0].initializeApp(FB)),f:m[1]}});return fsP}
+function save(col,data){return fs().then(function(x){return x.f.addDoc(x.f.collection(x.db,col),Object.assign({at:x.f.serverTimestamp()},data))})}
+/* ---------- forms ---------- */
+var EM=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function setErr(id,msg){var e=document.getElementById(id+'-e');if(e)e.textContent=msg||'';var i=document.getElementById(id);if(i)i.setAttribute('aria-invalid',msg?'true':'false')}
+function tooSoon(key){var n=Date.now(),l=0;try{l=+localStorage.getItem(key)||0}catch(e){}return n-l<30000}
+function stamp(key){try{localStorage.setItem(key,String(Date.now()))}catch(e){}}
+var F=document.getElementById('f');
+if(F)F.addEventListener('submit',function(e){e.preventDefault();
+var g=function(i){return document.getElementById(i).value.trim()},o=document.getElementById('ok'),oe=document.getElementById('oe'),b=F.querySelector('button[type=submit]');
+var nm=g('n'),cl=g('c'),mail=g('e'),tel=g('p'),good=true;
+function bad(id,sw,en){setErr(id,L=='en'?en:sw);good=false}
+['n','c','e','p'].forEach(function(i){setErr(i,'')});o.style.display='none';oe.style.display='none';
+if(nm.length<2||!/[A-Za-z\u00C0-\u024F]/.test(nm))bad('n','Andika jina kamili (angalau herufi 2).','Enter your full name (at least 2 letters).');
+if(cl.length<2)bad('c','Andika jina la chuo chako.','Enter your college name.');
+if(!EM.test(mail)||mail.length>200)bad('e','Andika barua pepe sahihi.','Enter a valid email address.');
+if(tel&&!/^[+()\d\s-]{7,20}$/.test(tel))bad('p','Namba ya simu si sahihi.','Phone number is not valid.');
+if(!good){var f1=F.querySelector('[aria-invalid="true"]');if(f1)f1.focus();return}
+function okMsg(){o.innerHTML=tx('Asante '+nm+'! Ombi la '+cl+' limepokelewa.','Thank you '+nm+'! The request for '+cl+' has been received.');o.style.display='block';F.reset()}
+if(document.getElementById('hp').value){okMsg();return}
+if(tooSoon('lsub')){oe.innerHTML=tx('Subiri sekunde chache, kisha jaribu tena.','Please wait a few seconds, then try again.');oe.style.display='block';return}
+b.disabled=true;b.setAttribute('aria-busy','true');
+var data={name:nm,college:cl,group:document.getElementById('k').value,email:mail};if(tel)data.phone=tel;
+save('registrations',data).then(function(){stamp('lsub');okMsg()}).catch(function(){oe.innerHTML=tx('Imeshindwa kutuma. Jaribu tena.','Could not send. Please try again.');oe.style.display='block'}).then(function(){b.disabled=false;b.removeAttribute('aria-busy')})});
+var NF=document.getElementById('nf');
+NF.addEventListener('submit',function(e){e.preventDefault();var k=document.getElementById('nk'),ne=document.getElementById('ne'),v=document.getElementById('ne-in').value.trim();k.style.display='none';ne.style.display='none';
+if(!EM.test(v)){ne.innerHTML=tx('Andika barua pepe sahihi.','Enter a valid email address.');ne.style.display='block';return}
+if(tooSoon('lnews')){ne.innerHTML=tx('Subiri sekunde chache, kisha jaribu tena.','Please wait a few seconds, then try again.');ne.style.display='block';return}
+save('subscribers',{email:v}).then(function(){stamp('lnews');k.style.display='block';NF.reset()}).catch(function(){ne.innerHTML=tx('Imeshindwa. Jaribu tena.','Failed. Please try again.');ne.style.display='block'})});
+})();
