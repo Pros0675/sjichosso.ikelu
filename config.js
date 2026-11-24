@@ -1,29 +1,41 @@
 /* SJICHASSO – mipangilio rahisi. Jaza taarifa halisi hapa; acha '' kama bado hazijapatikana. */
-window.SJ={
-  org:{
-    full:'Saint Joseph Institute College Health Association Science Students\u2019 Organization',  /* thibitisha jina rasmi */
-    college:'Saint Joseph Institute College'
+window.SJ = {
+  org: {
+    full: 'Saint Joseph Institute College Health Association Science Students\u2019 Organization',
+    college: 'Saint Joseph Institute College'
   },
-  contact:{
-    email:'',      /* mfano: 'info@example.com' */
-    phone:'',      /* mfano: '+255 700 000 000' */
-    address:''
+  contact: {
+    email: '',
+    phone: '',
+    address: ''
   },
-  social:{         /* link kamili, mfano 'https://instagram.com/jina' */
-    instagram:'',
-    x:'',
-    youtube:'',
-    facebook:''
+  social: {
+    instagram: '',
+    x: '',
+    youtube: '',
+    facebook: ''
   },
-  images:{         /* weka jina la faili ulilopakia, mfano 'hero.jpg' */
-    logo:'',       /* nembo: 'logo.png' */
-    hero:'',
-    vilabu:'', afya:'', sanaa:'', michezo:'',
-    rais:'', makamu:'', waziri:'', mawaziri:''
+  images: {
+    logo: '',
+    hero: '',
+    vilabu: '', afya: '', sanaa: '', michezo: '',
+    mkuu: '', dean: '',
+    makamu: '', wulinzi: '', welimu: '', wsheria: ''
   },
-  docs:{           /* weka jina la PDF ulilopakia, mfano 'katiba.pdf' */
-    katiba:'',
-    kanuni:'',
-    kalenda:''
+  docs: {
+    katiba: '',
+    kanuni: '',
+    kalenda: ''
+  },
+  showContacts: true,
+  leaders: {
+    sara:      { phone: '0713 133 286', email: '' },
+    prosper:   { phone: '0675 295 764', email: '' },
+    avita:     { phone: '+255 744 236 957', email: '' },
+    getruda:   { phone: '+255 726 281 979', email: '' },
+    damian:    { phone: '+255 726 732 767', email: '' },
+    octavina:  { phone: '0704 741 790', email: 'octavinamlimbila@gmail.com' },
+    witness:   { phone: '0796 899 599', email: 'witness@gmail.com' },
+    christina: { phone: '0791 580 947', email: 'christinanyenyembe01@gmail.com' }
   }
 };
