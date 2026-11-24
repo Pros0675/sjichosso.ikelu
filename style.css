@@ -157,3 +157,23 @@ input[aria-invalid="true"]{border-color:#B3261E}
 .tiers li:nth-child(4){margin-left:20px;border-style:dashed}
 .fn{font:700 18px Sora,sans-serif;margin:6px 0 0;line-height:1.4}
 .fnf{color:#A9B6C8;font-size:13px;margin-top:8px;line-height:1.4}
+
+/* ===== v6: Muundo wa Serikali ya Wanafunzi ===== */
+.tiers li:nth-child(4){margin-left:0;border-style:solid}.tiers li:nth-child(-n+2){border-color:#F2B705}
+.chart{display:flex;flex-direction:column;align-items:center;margin-top:32px}
+.cn{background:var(--card);border:2px solid var(--navy);border-radius:12px;padding:14px 24px;font-weight:700;text-align:center;min-width:240px;max-width:100%}
+.cn.off{border-color:#F2B705;border-style:dashed}
+.ln{width:2px;height:22px;background:var(--navy);flex:none}
+.cmin{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;width:100%;max-width:1000px;border-top:2px solid var(--navy);padding-top:22px;position:relative}
+.cmin .cn{min-width:0;font-size:14px;font-weight:600;border-width:1.5px}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .cn,:root:not([data-theme="light"]) .ln{border-color:#5B7BA8}:root:not([data-theme="light"]) .ln{background:#5B7BA8}:root:not([data-theme="light"]) .cn.off{border-color:#F2B705}:root:not([data-theme="light"]) .cmin{border-color:#5B7BA8}}
+:root[data-theme="dark"] .cn,:root[data-theme="dark"] .cmin{border-color:#5B7BA8}:root[data-theme="dark"] .ln{background:#5B7BA8}:root[data-theme="dark"] .cn.off{border-color:#F2B705}
+.lp b{font-size:11px}
+.lg2{grid-template-columns:repeat(auto-fit,minmax(170px,220px));justify-content:center}
+
+/* ===== v7: leader photos & contacts ===== */
+.lg3{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px}.lg3 .pc .lp{aspect-ratio:3/4}.lg3 .nm{font-size:13px;margin-top:10px}.lg3 .rl{font-size:12px;line-height:1.3}
+.ct2{display:flex;flex-direction:column;gap:2px;margin-top:8px;font-size:13px}.ct2 a{color:var(--acc);text-decoration:none;word-break:break-all}.ct2 a:hover{text-decoration:underline}
+.pc .lp{box-shadow:0 4px 14px rgba(11,37,69,.12)}
+.lg2.m5{grid-template-columns:repeat(5,minmax(0,200px))}
+@media(max-width:1000px){.lg2.m5{grid-template-columns:repeat(auto-fit,minmax(150px,200px))}}
