@@ -149,3 +149,11 @@ input[aria-invalid="true"]{border-color:#B3261E}
 .stats .sg{padding-bottom:32px}
 .s2 .st{margin-top:0}.s2{padding:48px 0}
 .cb .btn span{color:inherit;font-size:inherit}
+
+/* ===== v5: SJICHASSO leadership structure & full name ===== */
+.tiers{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px;counter-reset:t}
+.tiers li{counter-increment:t;display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-weight:600}
+.tiers li:before{content:counter(t);width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 14px Sora,sans-serif;flex:none}
+.tiers li:nth-child(4){margin-left:20px;border-style:dashed}
+.fn{font:700 18px Sora,sans-serif;margin:6px 0 0;line-height:1.4}
+.fnf{color:#A9B6C8;font-size:13px;margin-top:8px;line-height:1.4}
