@@ -1,11 +1,15 @@
-/* SJICHOSSO – mipangilio rahisi. Jaza taarifa halisi hapa; acha '' kama bado hazijapatikana. */
+/* SJICHASSO – mipangilio rahisi. Jaza taarifa halisi hapa; acha '' kama bado hazijapatikana. */
 window.SJ={
-  contact:{
-    email:'',      /* mfano: 'info@sjichosso.or.tz' */
-    phone:'',      /* mfano: '+255 700 000 000' */
-    address:''     /* mfano: 'Dar es Salaam, Tanzania' */
+  org:{
+    full:'Saint Joseph Institute College Health Association Science Students\u2019 Organization',  /* thibitisha jina rasmi */
+    college:'Saint Joseph Institute College'
   },
-  social:{         /* weka link kamili, mfano 'https://instagram.com/jina' */
+  contact:{
+    email:'',      /* mfano: 'info@example.com' */
+    phone:'',      /* mfano: '+255 700 000 000' */
+    address:''
+  },
+  social:{         /* link kamili, mfano 'https://instagram.com/jina' */
     instagram:'',
     x:'',
     youtube:'',
@@ -15,7 +19,7 @@ window.SJ={
     logo:'',       /* nembo: 'logo.png' */
     hero:'',
     vilabu:'', afya:'', sanaa:'', michezo:'',
-    rais:'', makamu:'', katibu:'', hazina:''
+    rais:'', makamu:'', waziri:'', mawaziri:''
   },
   docs:{           /* weka jina la PDF ulilopakia, mfano 'katiba.pdf' */
     katiba:'',
